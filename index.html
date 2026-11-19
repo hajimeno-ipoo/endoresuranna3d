@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://endoresuranna3d.vercel.app/">
@@ -48,7 +48,7 @@
         -webkit-user-select: none;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
+        touch-action: none;
         overscroll-behavior: none;
       }
       button { min-height: 2.75rem; font-family: inherit; }
@@ -386,7 +386,7 @@
          paints in front (see the .overlay layering note). Portrait
          phones use the larger reserve in the media query below. */
       #overlay-title { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
-      #overlay-title .card { max-height: calc(100dvh - var(--pad-total) - 110px - env(safe-area-inset-bottom, 0px)); }
+      #overlay-title .card { max-height: calc(100dvh - var(--pad-total) - 110px - env(safe-area-inset-bottom, 0px)); max-height: calc(100svh - var(--pad-total) - 110px - env(safe-area-inset-bottom, 0px)); }
       /* Portrait phones: START / SELECT sit in their own strip
          at the very bottom of the screen, BELOW the D-pad and
          A/B/S row — the bar used to float centred just above the
@@ -405,7 +405,7 @@
            START / SELECT are never covered (the card scrolls
            internally instead on short screens) */
         #overlay-title { padding-bottom: calc(252px + env(safe-area-inset-bottom, 0px)); }
-        #overlay-title .card { max-height: calc(100dvh - var(--pad-total) - 270px - env(safe-area-inset-bottom, 0px)); }
+        #overlay-title .card { max-height: calc(100dvh - var(--pad-total) - 270px - env(safe-area-inset-bottom, 0px)); max-height: calc(100svh - var(--pad-total) - 270px - env(safe-area-inset-bottom, 0px)); }
       }
       #speed-bar { width: 74px; height: 7px; border-radius: 4px; background: rgba(255,255,255,0.2); overflow: hidden; }
       #speed-fill { height: 100%; width: 20%; background: linear-gradient(90deg, #00d5ff, #ff2e88); border-radius: 4px; transition: width 0.3s linear; }
@@ -778,7 +778,9 @@
         position: relative;
         width: min(520px, 94vw);
         max-height: calc(100dvh - var(--pad-total) - 16px);
+        max-height: calc(100svh - var(--pad-total) - 16px);
         overflow-y: auto;
+        touch-action: pan-y;
         background: linear-gradient(180deg, rgba(155, 207, 250, 0.95), rgba(196, 181, 253, 0.95));
         border: 3px solid #fff;
         border-radius: 24px;
@@ -966,6 +968,31 @@
         .tagline { margin-bottom: 6px; }
         .df-btn { padding: 5px 3px; }
         .ch-btn { padding: 6px 3px 5px; }
+        /* result card compaction: the worst case (all three goal
+           lines shown, fever notes on all three breakdown rows)
+           must still fit a 390x660 screen down to the share
+           button with no scrolling — shrink the rank stamp and
+           tighten the vertical rhythm of everything below the
+           title. Scoped to #overlay-over so the title card and
+           the other cards keep their spacing. */
+        #overlay-over .card h2 { margin-bottom: 4px; }
+        #overlay-over .tagline { margin-bottom: 4px; }
+        #overlay-over #rank-stamp { width: 88px; height: 88px; margin: 4px auto 2px; }
+        #overlay-over #rank-letter { font-size: 46px; }
+        #overlay-over #rank-stamp[data-rank="SS"] #rank-letter { font-size: 34px; }
+        #overlay-over .result-stats { margin: 6px 0 2px; gap: 8px; }
+        #overlay-over .result-stat { padding: 6px 6px; }
+        #overlay-over .result-stat .v { font-size: 21px; }
+        #overlay-over #breakdown { margin: 6px auto 0; }
+        #overlay-over .bd-row { padding: 3px 4px; }
+        #overlay-over .bd-nm-sub { margin-top: 1px; line-height: 1.35; }
+        #overlay-over #new-record { margin-top: 4px; font-size: 15px; min-height: 1.3em; }
+        #overlay-over #goal-best, #overlay-over #goal-rank { margin-top: 1px; font-size: 13.5px; }
+        #overlay-over .retry-note { margin-top: 6px; }
+        #overlay-over .btn-row { margin-top: 8px; }
+        #overlay-over .big-btn { min-height: 50px; padding: 9px 30px; font-size: 17px; }
+        #overlay-over .ghost-btn { min-height: 42px; padding: 7px 20px; }
+        #overlay-over .share-row { margin-top: 6px; }
       }
       #tod-chip {
         min-width: 2.2em;
@@ -1110,7 +1137,6 @@
       #loading-bar-fill {
         height: 100%; width: 0%;
         background: #ffd21f; border-radius: 999px;
-        transition: width 0.25s ease;
       }
       #loading-pct { font-size: 12px; letter-spacing: 0.14em; color: rgba(255,255,255,0.75); min-height: 1.2em; }
       #error-overlay {
