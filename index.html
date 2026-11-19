@@ -1392,7 +1392,7 @@
       document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
       document.addEventListener('touchstart', function (e) {
         var t = e.target;
-        if (t && t.closest && t.closest('#stage') && !t.closest('#sysbar')) e.preventDefault();
+        if (t && t.closest && t.closest('#stage, #vpad') && !t.closest('#sysbar')) e.preventDefault();
       }, { passive: false });
       (function watchReady() {
         if (window.__runnerReady) {
