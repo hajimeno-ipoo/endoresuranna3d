@@ -404,8 +404,8 @@
            (pads lifted 56px + their 184px hit area = 240px) so
            START / SELECT are never covered (the card scrolls
            internally instead on short screens) */
-        #overlay-title { padding-bottom: calc(252px + env(safe-area-inset-bottom, 0px)); }
-        #overlay-title .card { max-height: calc(100dvh - var(--pad-total) - 270px - env(safe-area-inset-bottom, 0px)); max-height: calc(100svh - var(--pad-total) - 270px - env(safe-area-inset-bottom, 0px)); }
+        #overlay-title { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+        #overlay-title .card { max-height: calc(100dvh - var(--pad-total) - 32px - env(safe-area-inset-bottom, 0px)); max-height: calc(100svh - var(--pad-total) - 32px - env(safe-area-inset-bottom, 0px)); }
       }
       #speed-bar { width: 74px; height: 7px; border-radius: 4px; background: rgba(255,255,255,0.2); overflow: hidden; }
       #speed-fill { height: 100%; width: 20%; background: linear-gradient(90deg, #00d5ff, #ff2e88); border-radius: 4px; transition: width 0.3s linear; }
