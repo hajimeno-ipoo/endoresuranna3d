@@ -1381,21 +1381,18 @@
       }
       window.addEventListener('error', function (e) { reportError('エラーが発生しました', e.error || e.message); });
       window.addEventListener('unhandledrejection', function (e) { reportError('3D の初期化に失敗しました', e.reason); });
-      /* iOS Safari ignores the viewport zoom lock and CSS touch-action
-         alone does not stop its double-tap zoom, so block the gestures
-         themselves: gesturestart kills pinch zoom, and a second touchend
-         within 300ms outside buttons/links/form controls/cards kills
-         double-tap zoom. Game input arrives via pointer events, so this
-         never interferes with play; clicks and in-card scrolling are
-         untouched because those targets are excluded. */
+      /* iOS Safari ignores the viewport zoom lock, and timing-based
+         double-tap detection leaks, so stop the gesture itself:
+         gesturestart kills pinch zoom, and every touch starting
+         inside the game surface (#stage) is preventDefault-ed at
+         touchstart, so the browser never begins its double-tap zoom
+         check at all. Game input arrives via pointer events, so this
+         never interferes with play. The START/SELECT bar (#sysbar)
+         is excluded because it needs click. */
       document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
-      var lastTouchEnd = 0;
-      document.addEventListener('touchend', function (e) {
-        var now = Date.now();
+      document.addEventListener('touchstart', function (e) {
         var t = e.target;
-        var interactive = t && t.closest && t.closest('button, a, input, select, textarea, .card');
-        if (!interactive && now - lastTouchEnd < 300) e.preventDefault();
-        lastTouchEnd = now;
+        if (t && t.closest && t.closest('#stage') && !t.closest('#sysbar')) e.preventDefault();
       }, { passive: false });
       (function watchReady() {
         if (window.__runnerReady) {
