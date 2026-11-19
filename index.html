@@ -977,9 +977,10 @@
            the other cards keep their spacing. */
         #overlay-over .card h2 { margin-bottom: 4px; }
         #overlay-over .tagline { margin-bottom: 4px; }
-        #overlay-over #rank-stamp { width: 88px; height: 88px; margin: 4px auto 2px; }
-        #overlay-over #rank-letter { font-size: 46px; }
-        #overlay-over #rank-stamp[data-rank="SS"] #rank-letter { font-size: 34px; }
+        #overlay-over .card { padding: 12px 16px 10px; }
+        #overlay-over #rank-stamp { width: 72px; height: 72px; margin: 4px auto 2px; }
+        #overlay-over #rank-letter { font-size: 38px; }
+        #overlay-over #rank-stamp[data-rank="SS"] #rank-letter { font-size: 28px; }
         #overlay-over .result-stats { margin: 6px 0 2px; gap: 8px; }
         #overlay-over .result-stat { padding: 6px 6px; }
         #overlay-over .result-stat .v { font-size: 21px; }
@@ -1380,6 +1381,22 @@
       }
       window.addEventListener('error', function (e) { reportError('エラーが発生しました', e.error || e.message); });
       window.addEventListener('unhandledrejection', function (e) { reportError('3D の初期化に失敗しました', e.reason); });
+      /* iOS Safari ignores the viewport zoom lock and CSS touch-action
+         alone does not stop its double-tap zoom, so block the gestures
+         themselves: gesturestart kills pinch zoom, and a second touchend
+         within 300ms outside buttons/links/form controls/cards kills
+         double-tap zoom. Game input arrives via pointer events, so this
+         never interferes with play; clicks and in-card scrolling are
+         untouched because those targets are excluded. */
+      document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
+      var lastTouchEnd = 0;
+      document.addEventListener('touchend', function (e) {
+        var now = Date.now();
+        var t = e.target;
+        var interactive = t && t.closest && t.closest('button, a, input, select, textarea, .card');
+        if (!interactive && now - lastTouchEnd < 300) e.preventDefault();
+        lastTouchEnd = now;
+      }, { passive: false });
       (function watchReady() {
         if (window.__runnerReady) {
           var el = document.getElementById('loading');
